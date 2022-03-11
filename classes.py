@@ -1,6 +1,6 @@
 from random import randint
 
-
+import pygame
 from pygame import Surface
 from pygame.mixer import music
 from pygame.locals import *
@@ -16,7 +16,6 @@ class Area:
         self.top = (WIN_SIZE[1] - self.height - self.left) // PX_SIZE * PX_SIZE
         self.right = self.left + self.width
         self.bottom = self.top + self.height
-        print(self.left, WIN_SIZE[0]-self.right)
 
 
 class LimitedArea(Area):
@@ -55,7 +54,6 @@ class Snake(Area):
         self.direction = K_LEFT
 
         self.walking = 1
-        self.collided = 0
 
     def head(self) -> tuple:
         return self.pos[0]
@@ -102,20 +100,49 @@ class Snake(Area):
             self.walking = 0
             music.load('sounds/lose.wav')
             music.play(0)
+    
+    def regenerate(self) -> None:
+        x = (self.right + self.left) // 2 // PX_SIZE * PX_SIZE
+        y = (self.bottom + self.top) // 2 // PX_SIZE * PX_SIZE
+
+        self.pos = [
+            (x, y),
+            (x + PX_SIZE, y),
+            (x + PX_SIZE * 2, y)
+        ]
+
+        self.skin1 = Surface((PX_SIZE, PX_SIZE))
+        self.skin1.fill(SECONDARY_COLOR)
+
+        self.skin2 = Surface((PX_SIZE, PX_SIZE))
+        self.skin2.fill(ACCENT_COLOR1)
+
+        self.direction = K_LEFT
+
+        self.walking = 1
 
 
 class Apple(Area):
     def __init__(self) -> None:
         Area.__init__(self)
 
-        x = randint(self.left, self.right)
-        y = randint(self.top, self.bottom)
+        x = randint(self.left + PX_SIZE, self.right - 2 * PX_SIZE)
+        y = randint(self.top + PX_SIZE, self.bottom - 2 * PX_SIZE)
         self.pos = (x // PX_SIZE * PX_SIZE, y // PX_SIZE * PX_SIZE)
 
         self.surface = Surface((PX_SIZE, PX_SIZE))
         self.surface.fill(RED)
 
     def regenerate(self) -> None:
-        x = randint(self.left, self.right)
-        y = randint(self.top, self.bottom)
+        x = randint(self.left + PX_SIZE, self.right - 2 * PX_SIZE)
+        y = randint(self.top + PX_SIZE, self.bottom - 2 * PX_SIZE)
         self.pos = (x // PX_SIZE * PX_SIZE, y // PX_SIZE * PX_SIZE)
+
+
+class Score:
+    def __init__(self) -> None:
+        self.value = 0
+    
+    def add(self) -> None: self.value += 1
+
+    def reset(self) -> None: self.value = 0
