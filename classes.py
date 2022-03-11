@@ -8,10 +8,38 @@ from pygame.locals import *
 from constants import *
 
 
-class Snake:
+class Area:
     def __init__(self) -> None:
-        x = WIN_SIZE[0] // 2 // PX_SIZE * PX_SIZE
-        y = WIN_SIZE[1] // 2 // PX_SIZE * PX_SIZE
+        self.width, self.height = LIMIT_AREA
+
+        self.left = (WIN_SIZE[0] - self.width + PX_SIZE) / 2 // PX_SIZE * PX_SIZE
+        self.top = (WIN_SIZE[1] - self.height - self.left) // PX_SIZE * PX_SIZE
+        self.right = self.left + self.width
+        self.bottom = self.top + self.height
+        print(self.left, WIN_SIZE[0]-self.right)
+
+
+class LimitedArea(Area):
+    def __init__(self) -> None:
+        Area.__init__(self)
+
+        self.border = PX_SIZE
+        self.color = ACCENT_COLOR2
+
+    def off_limits(self, pos: tuple) -> bool:
+        if self.left < pos[0] < self.right - PX_SIZE and \
+            self.top < pos[1] < self.bottom - PX_SIZE:
+            return False
+        else: return True
+
+
+class Snake(Area):
+    def __init__(self) -> None:
+        Area.__init__(self)
+
+        x = (self.right + self.left) // 2 // PX_SIZE * PX_SIZE
+        y = (self.bottom + self.top) // 2 // PX_SIZE * PX_SIZE
+
         self.pos = [
             (x, y),
             (x + PX_SIZE, y),
@@ -66,7 +94,8 @@ class Snake:
         music.load('sounds/eat.wav')
         music.play(0)
     
-    def collision(self, pos_a: tuple, pos_b: tuple) -> bool: return pos_a == pos_b
+    def collision(self, pos_a: tuple, pos_b: tuple) -> bool:
+        return pos_a == pos_b
 
     def stop(self) -> None:
         if self.walking == 1:
@@ -75,16 +104,18 @@ class Snake:
             music.play(0)
 
 
-class Apple:
+class Apple(Area):
     def __init__(self) -> None:
-        x = randint(0, WIN_SIZE[0])
-        y = randint(0, WIN_SIZE[1])
+        Area.__init__(self)
+
+        x = randint(self.left, self.right)
+        y = randint(self.top, self.bottom)
         self.pos = (x // PX_SIZE * PX_SIZE, y // PX_SIZE * PX_SIZE)
 
         self.surface = Surface((PX_SIZE, PX_SIZE))
         self.surface.fill(RED)
 
     def regenerate(self) -> None:
-        x = randint(0, WIN_SIZE[0])
-        y = randint(0, WIN_SIZE[1])
+        x = randint(self.left, self.right)
+        y = randint(self.top, self.bottom)
         self.pos = (x // PX_SIZE * PX_SIZE, y // PX_SIZE * PX_SIZE)

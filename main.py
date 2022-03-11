@@ -2,7 +2,7 @@ import pygame as pg
 from pygame.locals import *
 
 from constants import *
-from classes import Snake, Apple
+from classes import Snake, Apple, LimitedArea
 from functions import *
 
 
@@ -15,12 +15,16 @@ pg.display.set_caption('Snake Game')
 
 snake = Snake()
 apple = Apple()
+area = LimitedArea()
 
 
 while 1:
+    # loop constants
     pg.time.Clock().tick(15)
     win.fill(MAIN_COLOR)
 
+
+    # event detection
     for event in pg.event.get():
         if event.type == QUIT: exit_game()
 
@@ -39,6 +43,8 @@ while 1:
             elif event.key == K_LEFT and snake.direction != K_RIGHT:
                 snake.go_to(K_LEFT)
 
+
+    # collisions detection
     if collision(snake.head(), apple.pos):
         snake.grow()
         apple.regenerate()
@@ -47,9 +53,11 @@ while 1:
             if collision(pos, apple.pos):
                 apple.regenerate()
     
-    if off_limits(snake.head()):
+    if area.off_limits(snake.head()):
         snake.stop()
 
+
+    # draw
     snake.walk()
 
     for i, pos in enumerate(snake.full_body()):
@@ -59,5 +67,8 @@ while 1:
             win.blit(snake.skin2, pos)
     
     win.blit(apple.surface, apple.pos)
+
+    pg.draw.rect(win, area.color, pg.Rect(area.left, area.top, area.width, area.height), area.border)
+    # pg.draw.rect(win, area.color, pg.Rect(45, 40, 600, 585), area.border)
     
     pg.display.update()
