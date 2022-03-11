@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pygame as pg
 from pygame.locals import *
-from pygame_menu import Theme, Menu, events
+from pygame_menu import Theme, Menu, events, sound
 
 from constants import *
 from classes import Snake, Apple, LimitedArea, Score
@@ -84,10 +84,24 @@ def run():
         
         win.blit(apple.surface, apple.pos)
 
-        pg.draw.rect(win, area.color, pg.Rect(area.left, area.top, area.width, area.height), area.border)
+        pg.draw.rect(
+            win,
+            area.color,
+            pg.Rect(
+                area.left,
+                area.top,
+                area.width,
+                area.height
+            ),
+            area.border
+        )
 
         if snake.walking:
-            score_text = font.render(f'Score: {score.value}', True, ACCENT_COLOR2)
+            score_text = font.render(
+                f'Score: {score.value}',
+                True,
+                ACCENT_COLOR2
+            )
             score_text_rect = score_text.get_rect()
             score_text_rect.left = area.left
             score_text_rect.top = area.left
@@ -95,9 +109,17 @@ def run():
 
         else:
             if datetime.now().second % 2 == 0:
-                lose_text = font.render(f'Score: {score.value} points! Press "r" to restart!', True, RED)
+                lose_text = font.render(
+                    f'Score: {score.value} points! Press "r" to restart!',
+                    True,
+                    RED
+                )
             else:
-                lose_text = font.render(f'Score: {score.value} points! Press "r" to restart!', True, ACCENT_COLOR2)
+                lose_text = font.render(
+                    f'Score: {score.value} points! Press "r" to restart!',
+                    True,
+                    ACCENT_COLOR2
+                )
 
             lose_text_rect = lose_text.get_rect()
             lose_text_rect.center = (WIN_SIZE[0] / 2, (area.top) / 2)
@@ -121,7 +143,11 @@ theme = Theme(
     widget_font_color = ACCENT_COLOR1
 )
 
+engine = sound.Sound()
+engine.set_sound(sound.SOUND_TYPE_KEY_ADDITION, '.\sounds\menu.wav')
+
 menu = Menu('Snake Game', WIN_SIZE[0], WIN_SIZE[1], theme=theme)
+menu.set_sound(engine)
 
 menu.add.button('Play', run)
 menu.add.button('Quit', events.EXIT)
