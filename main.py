@@ -194,12 +194,16 @@ theme = Theme(
 engine = sound.Sound()
 engine.set_sound(sound.SOUND_TYPE_KEY_ADDITION, '.\sounds\menu.wav')
 
-menu = Menu('Snake Game', WIN_SIZE[0], 500, theme=theme)
+menu = Menu('Snake Game', WIN_SIZE[0], WIN_SIZE[1], theme=theme)
 menu.set_sound(engine)
 
+menu.add.image('.\images\snake.gif')
+menu.add.vertical_margin(100)
 menu.add.button('Play', run)
 menu.add.button('Quit', events.EXIT)
-menu.add.vertical_margin(20, 'm')
+menu.add.vertical_margin(20)
 menu.add.label('Arrow Keys to move:\n◄▲▼►')
+menu.add.vertical_margin(200)
+menu.add.label('by: LucasGoncSilva')
 
 menu.mainloop(win)

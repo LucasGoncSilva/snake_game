@@ -162,19 +162,14 @@ class DataBase:
         self.add(0)
 
     def add(self, score: int) -> None:
-        if self.new_high(score):
-            self.query.execute('INSERT INTO scores (score) VALUES (?)', (score,))
-            self.clean()
-            self.save()
+        self.query.execute('INSERT INTO scores (score) VALUES (?)', (score,))
+        self.clean()
+        self.save()
 
     def high(self) -> int:
         query, = self.query.execute('SELECT * FROM scores ORDER BY score DESC LIMIT 1')
         num, = query
         return num
-
-    def new_high(self, num: int) -> bool:
-        if num > self.high(): return True
-        return False
 
     def clean(self) -> None:
         scores = [num for num, in self.query.execute('SELECT * FROM scores')]
