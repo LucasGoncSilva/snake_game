@@ -20,8 +20,9 @@
 
 <h2>Features :star: </h2>
 
-- [x] Contagem de pontuação
 - [x] Controles simples do personagem; sem invenções
+- [x] Contagem de pontuação
+- [x] Armazenamento de maior pontuação (record)
 
 <br>
 
@@ -63,3 +64,22 @@ Execute o arquivo `snage_game.py`
 ```cmd
 py main.py
 ```
+
+<br>
+
+<h3>Comando e controles</h3>
+
+<h4>Menu</h4>
+<ul>
+<li>Setas direcionais cima e baixo navegam entre as opções do menu</li>
+<li>Enter seleciona a ação: "play" ou "quit"</li>
+</ul>
+
+<hr>
+
+<h4>Jogando</h4>
+<ul>
+<li>Setas direcionais controlam as direções da cobrinha</li>
+<li>R reinicia a partida após seu término</li>
+<li>Q e ESC saem do jogo a qualquer momento</li>
+</ul>

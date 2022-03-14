@@ -150,8 +150,7 @@ class Score:
 
 class DataBase:
     def __init__(self) -> None:
-        # self.db = sqlite3.connect('scores.db')
-        self.db = sqlite3.connect(':memory:')
+        self.db = sqlite3.connect('scores.db')
         self.query = self.db.cursor()
 
         self.query.execute(
@@ -163,16 +162,17 @@ class DataBase:
         self.add(0)
 
     def add(self, score: int) -> None:
-        self.query.execute('INSERT INTO scores (score) VALUES (?)', (score,))
-        self.clean()
-        self.save()
+        if self.new_high(score):
+            self.query.execute('INSERT INTO scores (score) VALUES (?)', (score,))
+            self.clean()
+            self.save()
 
     def high(self) -> int:
         query, = self.query.execute('SELECT * FROM scores ORDER BY score DESC LIMIT 1')
         num, = query
         return num
 
-    def compare(self, num: int) -> bool:
+    def new_high(self, num: int) -> bool:
         if num > self.high(): return True
         return False
 
