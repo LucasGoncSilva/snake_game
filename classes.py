@@ -160,8 +160,11 @@ class DataBase:
             """
         )
 
-    def new(self, score: int) -> None:
+        self.add(0)
+
+    def add(self, score: int) -> None:
         self.query.execute('INSERT INTO scores (score) VALUES (?)', (score,))
+        self.clean()
         self.save()
 
     def high(self) -> int:
@@ -169,8 +172,16 @@ class DataBase:
         num, = query
         return num
 
-    def compare(self) -> None:
-        pass
+    def compare(self, num: int) -> bool:
+        if num > self.high(): return True
+        return False
+
+    def clean(self) -> None:
+        scores = [num for num, in self.query.execute('SELECT * FROM scores')]
+        if len(scores) > 3:
+            high = self.high()
+            self.query.execute('DELETE FROM scores')
+            self.add(high)
 
     def save(self) -> None:
         self.db.commit()
