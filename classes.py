@@ -1,6 +1,6 @@
 from random import randint
+import sqlite3
 
-import pygame
 from pygame import Surface
 from pygame.mixer import music
 from pygame.locals import *
@@ -146,3 +146,35 @@ class Score:
     def add(self) -> None: self.value += 1
 
     def reset(self) -> None: self.value = 0
+
+
+class DataBase:
+    def __init__(self) -> None:
+        # self.db = sqlite3.connect('scores.db')
+        self.db = sqlite3.connect(':memory:')
+        self.query = self.db.cursor()
+
+        self.query.execute(
+            """CREATE TABLE IF NOT EXISTS
+            scores (score INTEGER NOT NULL)
+            """
+        )
+
+    def new(self, score: int) -> None:
+        self.query.execute('INSERT INTO scores (score) VALUES (?)', (score,))
+        self.save()
+
+    def high(self) -> int:
+        query, = self.query.execute('SELECT * FROM scores ORDER BY score DESC LIMIT 1')
+        num, = query
+        return num
+
+    def compare(self) -> None:
+        pass
+
+    def save(self) -> None:
+        self.db.commit()
+
+    def save2go(self) -> None:
+        self.db.commit()
+        self.db.close()
