@@ -1,7 +1,10 @@
 from datetime import datetime
 
 import pygame as pg
-from pygame.locals import *
+
+from pygame.locals import QUIT, KEYDOWN, K_ESCAPE, K_UP, \
+    K_DOWN, K_LEFT, K_RIGHT, K_r, K_q
+
 from pygame_menu import Theme, Menu, events, sound
 
 from constants import *
