@@ -6,7 +6,7 @@
 
 <h2>Status do Projeto :chart_with_upwards_trend: </h2>
 
-:construction: Em andamento :construction:
+:heavy_check_mark: Finalizado com sucesso :heavy_check_mark:
 
 <br>
 
